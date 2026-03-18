@@ -39,81 +39,56 @@ The security of RSA relies on the difficulty of factoring large numbers; thus, c
 ```c
 #include <stdio.h>
 
-int gcd(int a, int b) { 
-    while (b != 0) { 
-        int temp = b; 
-        b = a % b; 
-        a = temp; 
-    } 
-    return a; 
-} 
+int main()
+{
+    int p, q, n, phi, e, d = 1, m, c = 1, i;
 
-int modInverse(int e, int phi) { 
-    int d = 1; 
-    while ((d * e) % phi != 1) { 
-        d++; 
-    } 
-    return d; 
-} 
+    printf("Enter two prime numbers (p and q): ");
+    scanf("%d %d", &p, &q);
 
-long long power(long long base, long long exp, long long mod) { 
-    long long result = 1; 
-    base = base % mod; 
-    while (exp > 0) { 
-        if (exp % 2 == 1) 
-            result = (result * base) % mod; 
-        exp = exp / 2; 
-        base = (base * base) % mod; 
-    } 
-    return result; 
-} 
+    n = p * q;
+    phi = (p - 1) * (q - 1);
 
-int main() { 
-    int p, q, n, phi, e, d, message; 
-    long long ciphertext, decrypted; 
+    printf("Enter value of e: ");
+    scanf("%d", &e);
 
-    printf("Enter prime number p: "); 
-    scanf("%d", &p); 
+    // Find d (multiplicative inverse)
+    while((d * e) % phi != 1)
+    {
+        d++;
+    }
 
-    printf("Enter prime number q: "); 
-    scanf("%d", &q); 
+    printf("Enter message (number): ");
+    scanf("%d", &m);
 
-    n = p * q; 
-    phi = (p - 1) * (q - 1); 
+    // Encryption: c = m^e mod n
+    for(i = 0; i < e; i++)
+    {
+        c = (c * m) % n;
+    }
 
-    printf("Enter public key exponent e (should be coprime with %d): ", phi); 
-    scanf("%d", &e); 
+    printf("Encrypted message: %d\n", c);
 
-    if (gcd(e, phi) != 1) { 
-        printf("Error: e is not coprime with phi(n). Try again.\n"); 
-        return 1; 
-    } 
+    int decrypted = 1;
 
-    d = modInverse(e, phi); 
+    // Decryption: m = c^d mod n
+    for(i = 0; i < d; i++)
+    {
+        decrypted = (decrypted * c) % n;
+    }
 
-    printf("\nPublic Key (e, n): (%d, %d)\n", e, n); 
-    printf("Private Key (d, n): (%d, %d)\n", d, n); 
-     
-    printf("\nEnter message (as integer < %d): ", n); 
-    scanf("%d", &message); 
+    printf("Decrypted message: %d\n", decrypted);
 
-    ciphertext = power(message, e, n); 
-    printf("Encrypted Message: %lld\n", ciphertext); 
-
-    decrypted = power(ciphertext, d, n); 
-    printf("Decrypted Message: %lld\n", decrypted); 
-
-    return 0; 
-} 
-
+    return 0;
+}
 ```
 
 
 
 ## Output:
 
-<img width="626" height="452" alt="image" src="https://github.com/user-attachments/assets/2d079f80-ee66-42cf-91f4-dcdd0966f5e5" />
+<img width="519" height="326" alt="image" src="https://github.com/user-attachments/assets/ac2cc243-0d0b-4911-b777-ec583e83676b" />
 
 
 ## Result:
- The program is executed successfully.
+ The program for RSA algorithm is executed successfully.
